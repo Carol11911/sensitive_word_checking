@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态查询敏感词</title>
+</head>
+<body>
+    <h1>动态查询敏感词</h1>
+    <input type="text" id="inputText" placeholder="在此输入文本">
+    <button onclick="checkSensitiveWords()">查询</button>
+    <div id="result"></div>
+
+    <script>
+        function checkSensitiveWords() {
+            var inputText = document.getElementById("inputText").value;
+            var resultElement = document.getElementById("result");
+
+            // 使用 fetch API 获取敏感词列表文件
+            fetch('https://github.com/Carol11911/sensitive_word_checking/blob/main/sensitive_word_dict.txt')
+                .then(response => response.text())
+                .then(data => {
+                    var sensitiveWords = data.split('\n');
+                    var foundSensitiveWords = [];
+
+                    sensitiveWords.forEach(function(word) {
+                        if (inputText.includes(word.trim())) {
+                            foundSensitiveWords.push(word.trim());
+                        }
+                    });
+
+                    if (foundSensitiveWords.length > 0) {
+                        resultElement.innerText = "发现敏感词：" + foundSensitiveWords.join(", ");
+                    } else {
+                        resultElement.innerText = "未发现敏感词";
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
